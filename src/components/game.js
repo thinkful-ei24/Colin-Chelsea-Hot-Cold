@@ -12,20 +12,25 @@ export default class Game extends React.Component {
       currentGuess: 0,
       pastGuesses: [],
       targetNumber: Math.floor(Math.random() * 101),
-      feedback: 'Make your guess!'
+      feedback: 'Make your guess!',
+      isHidden: true
     };
   }
 
   setCurrentGuess(number) {
-    this.setState({
-      currentGuess: number,
-      pastGuesses: [...this.state.pastGuesses, number]
-    }, () => this.evaluateFeedback(this.state.targetNumber, this.state.currentGuess));
+    this.setState(
+      {
+        currentGuess: number,
+        pastGuesses: [...this.state.pastGuesses, number]
+      },
+      () =>
+        this.evaluateFeedback(this.state.targetNumber, this.state.currentGuess)
+    );
   }
 
   evaluateFeedback(targetNumber, currentGuess) {
     console.log(this.state.currentGuess);
-    if (!Number(currentGuess)  ) {
+    if (!Number(currentGuess)) {
       this.setState({
         feedback: 'learn what a number is'
       });
@@ -33,15 +38,24 @@ export default class Game extends React.Component {
       this.setState({
         feedback: 'You did it!'
       });
-    } else if ((targetNumber - currentGuess >= -5) && (targetNumber - currentGuess <= 5)) {
+    } else if (
+      targetNumber - currentGuess >= -5 &&
+      targetNumber - currentGuess <= 5
+    ) {
       this.setState({
         feedback: 'very hot'
       });
-    } else if ((targetNumber - currentGuess >= -15) && (targetNumber - currentGuess <= 15)) {
+    } else if (
+      targetNumber - currentGuess >= -15 &&
+      targetNumber - currentGuess <= 15
+    ) {
       this.setState({
         feedback: 'hot'
       });
-    } else if ((targetNumber - currentGuess >= -30) && (targetNumber - currentGuess <= 30)) {
+    } else if (
+      targetNumber - currentGuess >= -30 &&
+      targetNumber - currentGuess <= 30
+    ) {
       this.setState({
         feedback: 'cold'
       });
@@ -52,14 +66,21 @@ export default class Game extends React.Component {
     }
   }
 
+  toggleHidden() {
+    this.setState({
+      isHidden: !this.state.isHidden
+    });
+  }
 
   render() {
     return (
       <div>
-        <Header />
+        <Header
+          tutorial={() => this.toggleHidden()}
+          isHidden={this.state.isHidden}
+        />
         <GuessSection
           guess={number => this.setCurrentGuess(Number(number))}
-
           feedback={this.state.feedback}
         />
         <GuessCount count={this.state.pastGuesses.length} />
