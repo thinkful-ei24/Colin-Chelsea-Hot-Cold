@@ -11,23 +11,55 @@ export default class Game extends React.Component {
     this.state = {
       currentGuess: 0,
       pastGuesses: [],
-      targetNumber: 0,
+      targetNumber: Math.floor(Math.random() * 101),
       feedback: 'Make your guess!'
     };
   }
 
   setCurrentGuess(number) {
     this.setState({
-      currentGuess: number
-    });
+      currentGuess: number,
+      pastGuesses: [...this.state.pastGuesses, number]
+    }, () => this.evaluateFeedback(this.state.targetNumber, this.state.currentGuess));
   }
+
+  evaluateFeedback(targetNumber, currentGuess) {
+    console.log(this.state.currentGuess);
+    if (!Number(currentGuess)  ) {
+      this.setState({
+        feedback: 'learn what a number is'
+      });
+    } else if (targetNumber - currentGuess === 0) {
+      this.setState({
+        feedback: 'You did it!'
+      });
+    } else if ((targetNumber - currentGuess >= -5) && (targetNumber - currentGuess <= 5)) {
+      this.setState({
+        feedback: 'very hot'
+      });
+    } else if ((targetNumber - currentGuess >= -15) && (targetNumber - currentGuess <= 15)) {
+      this.setState({
+        feedback: 'hot'
+      });
+    } else if ((targetNumber - currentGuess >= -30) && (targetNumber - currentGuess <= 30)) {
+      this.setState({
+        feedback: 'cold'
+      });
+    } else {
+      this.setState({
+        feedback: 'ice cold'
+      });
+    }
+  }
+
 
   render() {
     return (
       <div>
         <Header />
         <GuessSection
-          guess={number => this.setCurrentGuess(number)}
+          guess={number => this.setCurrentGuess(Number(number))}
+
           feedback={this.state.feedback}
         />
         <GuessCount count={this.state.pastGuesses.length} />
