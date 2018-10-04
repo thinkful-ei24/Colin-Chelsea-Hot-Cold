@@ -16,11 +16,20 @@ export default class Game extends React.Component {
     };
   }
 
+  setCurrentGuess(number) {
+    this.setState({
+      currentGuess: number
+    });
+  }
+
   render() {
     return (
       <div>
         <Header />
-        <GuessSection feedback={this.state.feedback} />
+        <GuessSection
+          guess={number => this.setCurrentGuess(number)}
+          feedback={this.state.feedback}
+        />
         <GuessCount count={this.state.pastGuesses.length} />
         <GuessList guesses={this.state.pastGuesses} />
       </div>
